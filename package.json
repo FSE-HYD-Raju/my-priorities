@@ -1,0 +1,23 @@
+{
+  "name": "priorities",
+  "version": "1.0.0",
+  "description": "Api for priorities",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cors": "2.8.4",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.5",
+    "mongodb-core": "^3.2.7",
+    "mongoose": "^5.0.15",
+    "nodemailer": "^5.1.1",
+    "unirest": "^0.5.1"
+  },
+  "devDependencies": {},
+  "author": "TAG",
+  "license": "ISC"
+}
