@@ -22,7 +22,7 @@ var prioritiesSchema = mongoose.Schema({
 });
 
 
-var Priorities = module.exports = mongoose.model('Priority', prioritiesSchema, 'priorities');
+var Priorities = module.exports = mongoose.model('priorities', prioritiesSchema, 'priorities');
 
 module.exports.getPriorities = function (callback) {
     Priorities.aggregate(
