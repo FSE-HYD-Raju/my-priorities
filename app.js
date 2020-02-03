@@ -68,7 +68,7 @@ db.once('open', function () {
     });
 
     app.get('/priorities/:uid', function (req, res) {
-        BooksInfo.getBookById(req.params._id, function (err, priorities) {
+        BooksInfo.getPriorities(req.params._id, function (err, priorities) {
             if (err) {
                 console.log(err);
             }
