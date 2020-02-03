@@ -18,7 +18,7 @@ var options = {
     server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
 };
-var mongodbUri = 'mongodb+srv://raju:9700124792@cluster0-iinuy.mongodb.net/test?retryWrites=true&w=majority';
+var mongodbUri = 'mongodb+srv://priorities_admin:P79GDINDszDBWAkD@cluster0-5l46f.mongodb.net/priorities_db?retryWrites=true&w=majority';
 
 mongoose.connect(mongodbUri);
 var db = mongoose.connection;
@@ -68,7 +68,7 @@ db.once('open', function () {
     });
 
     app.get('/priorities/:uid', function (req, res) {
-        BooksInfo.getPriorities(req.params._id, function (err, priorities) {
+        Priorities.getPriorities(req.params.uid, function (err, priorities) {
             if (err) {
                 console.log(err);
             }
@@ -78,6 +78,11 @@ db.once('open', function () {
 
     app.get('/', function (req, res) {
         res.send("Hey Raj!");
+    });
+
+    app.post('/post_priorities', function (req, res) {
+        var book = req.body.bookObj;
+        
     });
 
     app.listen(process.env.PORT || 5000);

@@ -22,12 +22,11 @@ var prioritiesSchema = mongoose.Schema({
 });
 
 
-var Priorities = module.exports = mongoose.model('priorities', prioritiesSchema, 'priorities');
+var Priorities = module.exports = mongoose.model('priorities', prioritiesSchema);
 
-module.exports.getPriorities = function (callback) {
-    Priorities.aggregate(
-        [], function (err, data) {
-            callback(err, data);
-        }
-    )
+module.exports.getPriorities = function (id, callback) {
+    Priorities.find({ 'uid': id }).lean()
+        .exec(function (err, usersDocuments) {
+            callback(err, usersDocuments);
+        });
 }
