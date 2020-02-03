@@ -18,7 +18,7 @@ var options = {
     server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
 };
-var mongodbUri = 'mongodb://thallapa:xqytw246@ds147274.mlab.com:47274/bmb';
+var mongodbUri = 'mongodb+srv://raju:9700124792@cluster0-iinuy.mongodb.net/test?retryWrites=true&w=majority';
 
 mongoose.connect(mongodbUri);
 var db = mongoose.connection;
