@@ -81,9 +81,34 @@ db.once('open', function () {
     });
 
     app.post('/post_priorities', function (req, res) {
-        var book = req.body.bookObj;
-        
+        var priorities = req.body;
+        Priorities.postPriorities(priorities, function (err, suc) {
+            if (err) {
+                res.json(err);
+            }
+            res.json(suc);
+        })
     });
+
+    app.post('/update_priorities', function (req, res) {
+        var priorities = req.body;
+        Priorities.updatePriorities(priorities, function (err, suc) {
+            if (err) {
+                res.json(err);
+            }
+            res.json(suc);
+        })
+    });
+
+    app.post('/delete_priorities/:_id', function (req, res) {
+        Priorities.deletePriorities(req.params._id, function (err, book) {
+            if (err) {
+                console.log(err);
+            }
+            res.json(book);
+        });
+    });
+
 
     app.listen(process.env.PORT || 5000);
     console.log('Running on port 3000')
