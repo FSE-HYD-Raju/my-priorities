@@ -13,7 +13,6 @@ var userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
     },
     otp: {
         type: String
@@ -47,7 +46,9 @@ module.exports.addUser = function (obj, callback) {
         if (err) { callback({ erroMsg: "ERROR" }) };
         if (!docs) {
             obj.created_date = new Date();
-            User.create(obj, callback);
+            User.create(obj).then(function (res, err) {
+                User.forgotPwd(obj.email, callback);
+            });
         } else {
             callback({ erroMsg: "INVALID" });
         }
@@ -67,12 +68,8 @@ module.exports.updateUser = function (id, user, options, callback) {
 
 module.exports.updateUserProfile = function (user, callback) {
     console.log(user);
-    if (user.resetPassword || user.otp) {
-        if (user.resetPassword)
-            var query = { email: user.email, password: user.password };
-        else if (user.otp)
-            var query = { email: user.email, otp: user.otp }
-
+    if (user.newPassword) {
+        var query = { email: user.email, password: user.password };
         var update = {
             password: user.newPassword,
             updated_date: new Date(),
@@ -88,7 +85,21 @@ module.exports.updateUserProfile = function (user, callback) {
     }
     console.log(update);
     console.log(query);
+    User.findOneAndUpdate(query, update, { new: true, "fields": { "_id": 1, "email": 1, "name": 1, "created_date": 1, "updated_date": 1 }, }, callback);
+}
 
+module.exports.registerNewPassword = function (user, callback) {
+    console.log(user);
+    var query = { email: user.email, otp: user.otp }
+
+    var update = {
+        password: user.newPassword,
+        updated_date: new Date(),
+        otp: null
+    }
+
+    console.log(update);
+    console.log(query);
     User.findOneAndUpdate(query, update, { new: true, "fields": { "_id": 1, "email": 1, "name": 1, "created_date": 1, "updated_date": 1 }, }, callback);
 }
 
@@ -113,20 +124,25 @@ module.exports.forgotPwd = function (email, callback) {
         if (err || !doc) {
             callback(err, res);
         } else {
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
+
+            let transporter = nodemailer.createTransport({
+                service: 'Gmail',
                 auth: {
+                    type: 'OAuth2',
                     user: 'TAGBMB@gmail.com',
-                    pass: 'qQ@976626'
+                    clientId: "754770916238-ik94iu4rmm873qu7s4gnpf030ap0o0k2.apps.googleusercontent.com",
+                    clientSecret: "Kxt1R5AufJ6LlaJRsV4xpvuZ",
+                    refreshToken: "1//0gyBGlxnfG2gdCgYIARAAGBASNwF-L9IrWEXghnDk6n5HUEQCzmGONRP9p3YbAB1tNS3GTcs9XYTpDgvjTE43ryn-PAO_tSu5S2E",
+                    accessToken: "ya29.Il-6BxuJEGrdeZD9Ux8g4vjWqUyr473jdq5-aUS43NBF8G2Jslxi1pnTDr_cJyBsFMMgNBVCMWhxTr3O4tBf9E9SFcvzzYMT4i09LnRlsSrcWwK_z7Gbm1h5Nf-lKqBcpw",
+                    expires: 1579206236301
                 }
             });
             var mailOptions = {
                 from: 'TAGBMB@gmail.com',
                 to: email,
                 bcc: 'akhilgoud616@gmail.com',
-                subject: 'BUY MY BOOK - PASSWORD RESET',
-                html: '<h2>Please use this below OTP to login. You can change your password in user profile page </h2> <br/><h1>' + pwd + '</h1>'
-                // text: ''
+                subject: 'BUY MY BOOK - OTP',
+                html: '<br/><h2>Please use this below OTP- </h2> <br/><h1>' + pwd + '</h1>'
             };
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
